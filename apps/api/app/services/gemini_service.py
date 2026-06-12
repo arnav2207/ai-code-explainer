@@ -76,7 +76,6 @@ class GeminiService:
                         temperature=0.1,
                         max_output_tokens=4096,
                         response_mime_type="application/json",
-                        response_schema=CodeExplanation,
                     ),
                 )
                 return response.text
