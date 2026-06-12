@@ -19,6 +19,7 @@ export type SupportedLanguage =
 export type ExplainRequest = {
   language: SupportedLanguage;
   code: string;
+  explanation_language: ExplanationLanguage;
 };
 
 export type CodeExplanation = {
@@ -45,3 +46,8 @@ export type ApiErrorResponse = {
   detail: string;
   code: string;
 };
+
+export type ExplanationLanguage =
+  | "english"
+  | "hindi"
+  | "telugu";

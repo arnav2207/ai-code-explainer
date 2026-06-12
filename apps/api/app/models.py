@@ -1,4 +1,5 @@
 from enum import StrEnum
+from enum import Enum
 
 from pydantic import BaseModel, ConfigDict, Field, computed_field, field_validator
 
@@ -21,10 +22,19 @@ class SupportedLanguage(StrEnum):
     shell = "shell"
     other = "other"
 
+class ExplanationLanguage(str, Enum):
+
+    ENGLISH = "english"
+
+    HINDI = "hindi"
+
+    TELUGU = "telugu"
+
 
 class ExplainRequest(BaseModel):
     language: SupportedLanguage = Field(..., description="Programming language of the submitted code.")
     code: str = Field(..., min_length=1, max_length=30_000, description="Source code to explain.")
+    explanation_language: ExplanationLanguage = ExplanationLanguage.ENGLISH
 
     @field_validator("code")
     @classmethod

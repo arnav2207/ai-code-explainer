@@ -19,6 +19,18 @@ You are an expert programming teacher and senior software engineer.
 Your job is to explain source code clearly, accurately, and safely.
 
 Rules:
+- The JSON property names MUST ALWAYS remain in English.
+- Never translate JSON property names.
+- Translate ONLY the values.
+- The required property names are exactly:
+  summary
+  line_by_line
+  functions
+  variables
+  time_complexity
+  space_complexity
+  improvements
+  beginner_explanation
 - Return ONLY a JSON object. Do not include markdown, code fences, commentary, or prose outside JSON.
 - The JSON object must exactly match the requested schema.
 - Every value must be a string.
@@ -116,24 +128,43 @@ class GeminiService:
         status_code = getattr(exc, "code", None)
         return status_code in {408, 409, 429, 500, 502, 503, 504}
 
+
     def _build_prompt(self, request: ExplainRequest) -> str:
-        return (
-            "Explain the following code and return JSON with exactly these keys:\n"
-            "- summary\n"
-            "- line_by_line\n"
-            "- functions\n"
-            "- variables\n"
-            "- time_complexity\n"
-            "- space_complexity\n"
-            "- improvements\n"
-            "- beginner_explanation\n\n"
-            f"Language: {request.language.value}\n"
-            "Code:\n"
-            "```"
-            f"{request.language.value}\n"
-            f"{request.code}\n"
-            "```"
-        )
+        return f"""
+        Explain the following code.
+
+        IMPORTANT:
+
+        Return ALL explanation text in {request.explanation_language.value}.
+
+        The JSON keys MUST remain in English.
+
+        Required JSON keys:
+
+        summary
+
+        line_by_line
+
+        functions
+
+        variables
+
+        time_complexity
+
+        space_complexity
+
+        improvements
+
+        beginner_explanation
+
+        Programming Language:
+        {request.language.value}
+
+        Code:
+
+        ```{request.language.value}
+
+        {request.code}"""
 
     def _parse_response(self, raw_text: str | None) -> CodeExplanation:
         if not raw_text:

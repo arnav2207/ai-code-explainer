@@ -7,6 +7,7 @@ import MonacoCodeEditor from "@/components/editor/monaco-code-editor";
 import { explainCode } from "@/lib/api";
 import type {
   ExplainResponse,
+  ExplanationLanguage,
   SupportedLanguage,
 } from "@/types/api";
 
@@ -17,6 +18,9 @@ export function CodeExplainerWorkspace() {
   const [code, setCode] = useState(
     `print("Hello, World!")`
   );
+
+  const [explanationLanguage, setExplanationLanguage] =
+    useState<ExplanationLanguage>("english");
 
   const [loading, setLoading] =
     useState(false);
@@ -35,6 +39,7 @@ export function CodeExplainerWorkspace() {
       const response = await explainCode({
         language,
         code,
+        explanation_language: explanationLanguage,
       });
 
       setResult(response);
@@ -78,6 +83,34 @@ export function CodeExplainerWorkspace() {
         <option value="go">Go</option>
         <option value="rust">Rust</option>
       </select>
+
+      <div className="space-y-2">
+        <label className="font-medium">
+            Explanation Language
+        </label>
+
+        <select
+            value={explanationLanguage}
+            onChange={(e) =>
+                setExplanationLanguage(
+                    e.target.value as ExplanationLanguage
+                )
+            }
+            className="rounded border p-2"
+        >
+            <option value="english">
+                English
+            </option>
+
+            <option value="hindi">
+                हिन्दी
+            </option>
+
+            <option value="telugu">
+                తెలుగు
+            </option>
+        </select>
+      </div>
 
       <MonacoCodeEditor
         language={language}
