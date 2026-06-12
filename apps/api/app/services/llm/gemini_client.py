@@ -1,3 +1,3 @@
-from app.services.gemini_service import GeminiService, GeminiServiceError
+from app.services.gemini_service import GeminiInvalidResponseError, GeminiService, GeminiServiceError
 
-__all__ = ["GeminiService", "GeminiServiceError"]
+__all__ = ["GeminiInvalidResponseError", "GeminiService", "GeminiServiceError"]

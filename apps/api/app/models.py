@@ -1,6 +1,6 @@
 from enum import StrEnum
 
-from pydantic import BaseModel, Field, computed_field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, computed_field, field_validator
 
 
 class SupportedLanguage(StrEnum):
@@ -41,13 +41,16 @@ class ExplanationMetadata(BaseModel):
 
 
 class CodeExplanation(BaseModel):
-    summary: str = Field(default="")
-    purpose: str = Field(default="")
-    key_concepts: list[str] = Field(default_factory=list)
-    step_by_step: list[str] = Field(default_factory=list)
-    complexity: str | None = Field(default=None)
-    potential_issues: list[str] = Field(default_factory=list)
-    suggested_improvements: list[str] = Field(default_factory=list)
+    model_config = ConfigDict(extra="forbid")
+
+    summary: str
+    line_by_line: str
+    functions: str
+    variables: str
+    time_complexity: str
+    space_complexity: str
+    improvements: str
+    beginner_explanation: str
 
 
 class ExplainResponse(BaseModel):
