@@ -30,6 +30,11 @@ class ExplanationLanguage(str, Enum):
 
     TELUGU = "telugu"
 
+class AIProvider(str, Enum):
+
+    GEMINI = "gemini"
+
+    OLLAMA = "ollama"
 
 class ExplainRequest(BaseModel):
     provider: AIProvider = AIProvider.GEMINI
@@ -47,6 +52,7 @@ class ExplainRequest(BaseModel):
 
 
 class ExplanationMetadata(BaseModel):
+    provider: AIProvider
     language: SupportedLanguage
     model: str
 
@@ -78,8 +84,3 @@ class ErrorResponse(BaseModel):
     detail: str
     code: str
 
-class AIProvider(str, Enum):
-
-    GEMINI = "gemini"
-
-    OLLAMA = "ollama"

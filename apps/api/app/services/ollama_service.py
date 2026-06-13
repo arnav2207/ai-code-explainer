@@ -7,23 +7,34 @@ from app.models import (
     ExplainRequest,
     ExplainResponse,
     ExplanationMetadata,
+    AIProvider
 )
 
 SYSTEM_PROMPT = """
-You are an expert programming teacher.
+You are an expert programming teacher and senior software engineer.
 
 Return ONLY valid JSON.
 
-Keys:
+The JSON MUST contain EXACTLY these keys:
 
-summary
-line_by_line
-functions
-variables
-time_complexity
-space_complexity
-improvements
-beginner_explanation
+{
+  "summary": "...",
+  "line_by_line": "...",
+  "functions": "...",
+  "variables": "...",
+  "time_complexity": "...",
+  "space_complexity": "...",
+  "improvements": "...",
+  "beginner_explanation": "..."
+}
+
+IMPORTANT:
+- Every value MUST be a STRING.
+- Do NOT return arrays.
+- Do NOT return objects.
+- Do NOT return markdown.
+- Do NOT return code fences.
+- Do NOT return explanations outside JSON.
 """.strip()
 
 
@@ -37,11 +48,13 @@ class OllamaService:
     ) -> ExplainResponse:
 
         prompt = f"""
-Language:
+Programming Language:
 {request.language.value}
 
-Code:
+Explanation Language:
+{request.explanation_language.value}
 
+Code:
 {request.code}
 """
 
@@ -64,19 +77,23 @@ Code:
                     "stream": False,
                 },
             )
+            response.raise_for_status()
 
         data = response.json()
 
-        content = data["message"]["content"]
-
-        explanation = CodeExplanation.model_validate(
-            json.loads(content)
-        )
+        try:
+            content = data["message"]["content"]
+            payload = json.loads(content)
+            explanation = CodeExplanation.model_validate(payload)
+        except Exception as exc:
+            raise RuntimeError(
+                "Ollama returned invalid JSON."
+            ) from exc
 
         return ExplainResponse(
-            ok=True,
             explanation=explanation,
             metadata=ExplanationMetadata(
+                provider=AIProvider.OLLAMA,
                 language=request.language,
                 model=self.settings.ollama_model,
             ),

@@ -17,6 +17,7 @@ export type SupportedLanguage =
   | "other";
 
 export type ExplainRequest = {
+  provider: AIProvider;
   language: SupportedLanguage;
   code: string;
   explanation_language: ExplanationLanguage;
@@ -51,3 +52,7 @@ export type ExplanationLanguage =
   | "english"
   | "hindi"
   | "telugu";
+
+export type AIProvider =
+  | "gemini"
+  | "ollama";

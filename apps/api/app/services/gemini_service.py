@@ -11,6 +11,7 @@ from pydantic import ValidationError
 
 from app.config import Settings
 from app.models import CodeExplanation, ExplainRequest, ExplainResponse, ExplanationMetadata
+from app.models import AIProvider
 
 logger = logging.getLogger(__name__)
 
@@ -70,6 +71,7 @@ class GeminiService:
         return ExplainResponse(
             explanation=explanation,
             metadata=ExplanationMetadata(
+                provider=AIProvider.GEMINI,
                 language=request.language,
                 model=self._settings.gemini_model,
             ),

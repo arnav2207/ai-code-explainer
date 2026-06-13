@@ -15,6 +15,9 @@ export function CodeExplainerWorkspace() {
   const [language, setLanguage] =
     useState<SupportedLanguage>("python");
 
+  const [provider, setProvider] =
+    useState<"gemini" | "ollama">("gemini");
+
   const [code, setCode] = useState(
     `print("Hello, World!")`
   );
@@ -37,6 +40,7 @@ export function CodeExplainerWorkspace() {
 
     try {
       const response = await explainCode({
+        provider,
         language,
         code,
         explanation_language: explanationLanguage,
@@ -60,6 +64,25 @@ export function CodeExplainerWorkspace() {
       <h1 className="text-3xl font-bold">
         AI Code Explainer
       </h1>
+
+      <select
+        value={provider}
+        onChange={(e) =>
+          setProvider(
+            e.target.value as
+            "gemini" | "ollama"
+          )
+        }
+        className="border rounded p-2"
+      >
+        <option value="gemini">
+          Gemini 2.5 Flash
+        </option>
+
+        <option value="ollama">
+          Ollama Local
+        </option>
+      </select>
 
       <select
         value={language}
@@ -148,6 +171,23 @@ export function CodeExplainerWorkspace() {
 
         {result && (
           <div className="space-y-6">
+            
+            <div className="rounded-md border bg-gray-50 p-3">
+              <p className="text-sm">
+              <strong>AI Provider:</strong>{" "}
+              {provider === "gemini"
+                ? "Google Gemini"
+                : "Ollama (Local)"}
+              </p>
+              <p className="text-sm">
+                <strong>Model:</strong>{" "}
+                {result.metadata.model}
+              </p>
+              <p className="text-sm">
+                <strong>Explanation Language:</strong>{" "}
+                {result.metadata.language}
+              </p>
+            </div>
 
             <section>
               <h3 className="font-bold">
