@@ -10,6 +10,14 @@ class Settings(BaseSettings):
     app_env: str = Field(default="development", alias="APP_ENV")
     gemini_api_key: str = Field(alias="GEMINI_API_KEY")
     gemini_model: str = Field(default="gemini-2.5-flash", alias="GEMINI_MODEL")
+    ollama_base_url: str = Field(
+        default="http://localhost:11434",
+        alias="OLLAMA_BASE_URL",
+    )
+    ollama_model: str = Field(
+        default="qwen2.5-coder:7b",
+        alias="OLLAMA_MODEL",
+    )
     allowed_origins: list[str] = Field(
         default_factory=lambda: ["http://localhost:3000"],
         alias="ALLOWED_ORIGINS",
