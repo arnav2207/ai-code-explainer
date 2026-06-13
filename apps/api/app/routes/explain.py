@@ -1,21 +1,18 @@
 import logging
-from functools import lru_cache
 
-from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi import APIRouter, HTTPException, Request, status
 
 from app.config import get_settings
 from app.models import ErrorResponse, ExplainRequest, ExplainResponse
-from app.services.gemini_service import GeminiInvalidResponseError, GeminiService, GeminiServiceError
+from app.services.ai_factory import AIFactory
+from app.services.gemini_service import (
+    GeminiInvalidResponseError,
+    GeminiServiceError,
+)
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api", tags=["explain"])
-
-
-@lru_cache
-def get_gemini_service() -> GeminiService:
-    return GeminiService(settings=get_settings())
-
 
 @router.post(
     "/explain",
@@ -29,7 +26,6 @@ def get_gemini_service() -> GeminiService:
 async def explain_code(
     payload: ExplainRequest,
     request: Request,
-    gemini_service: GeminiService = Depends(get_gemini_service),
 ) -> ExplainResponse:
     logger.info(
         "Received code explanation request",
@@ -39,9 +35,15 @@ async def explain_code(
             "client": request.client.host if request.client else None,
         },
     )
+    settings = get_settings()
+
+    service = AIFactory.create(
+        payload.provider,
+        settings,
+    )
 
     try:
-        return await gemini_service.explain_code(payload)
+        return await service.explain_code(payload)
     except GeminiInvalidResponseError as exc:
         logger.warning("Gemini returned an invalid explanation response: %s", exc)
         raise HTTPException(
