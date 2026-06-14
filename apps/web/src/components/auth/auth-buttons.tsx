@@ -7,7 +7,7 @@ export function AuthButtons() {
   const { isSignedIn } = useAuth();
 
   if (isSignedIn) {
-    return <UserButton afterSignOutUrl="/" />;
+    return <UserButton />;
   }
 
   return (
