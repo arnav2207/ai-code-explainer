@@ -22,6 +22,10 @@ class Settings(BaseSettings):
         default_factory=lambda: ["http://localhost:3000"],
         alias="ALLOWED_ORIGINS",
     )
+    clerk_jwks_url: str = Field(
+        default="",
+        alias="CLERK_JWKS_URL",
+    )
 
     model_config = SettingsConfigDict(
         env_file=".env",

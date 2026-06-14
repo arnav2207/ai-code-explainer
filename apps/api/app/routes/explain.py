@@ -1,7 +1,8 @@
 import logging
 
-from fastapi import APIRouter, HTTPException, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 
+from app.auth import verify_clerk_jwt
 from app.config import get_settings
 from app.models import ErrorResponse, ExplainRequest, ExplainResponse
 from app.services.ai_factory import AIFactory
@@ -18,6 +19,7 @@ router = APIRouter(prefix="/api", tags=["explain"])
     "/explain",
     response_model=ExplainResponse,
     responses={
+        status.HTTP_401_UNAUTHORIZED: {"model": ErrorResponse},
         status.HTTP_422_UNPROCESSABLE_ENTITY: {"model": ErrorResponse},
         status.HTTP_502_BAD_GATEWAY: {"model": ErrorResponse},
         status.HTTP_503_SERVICE_UNAVAILABLE: {"model": ErrorResponse},
@@ -26,6 +28,7 @@ router = APIRouter(prefix="/api", tags=["explain"])
 async def explain_code(
     payload: ExplainRequest,
     request: Request,
+    _user: dict = Depends(verify_clerk_jwt),
 ) -> ExplainResponse:
     logger.info(
         "Received code explanation request",

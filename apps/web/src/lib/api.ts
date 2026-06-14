@@ -12,12 +12,18 @@ export class ApiClientError extends Error {
   }
 }
 
-export async function explainCode(payload: ExplainRequest): Promise<ExplainResponse> {
+export async function explainCode(payload: ExplainRequest, token?: string): Promise<ExplainResponse> {
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
   const response = await fetch(`${API_BASE_URL}/api/explain`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers,
     body: JSON.stringify(payload),
   });
 

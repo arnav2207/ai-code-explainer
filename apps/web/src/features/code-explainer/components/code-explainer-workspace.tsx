@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useAuth } from "@clerk/nextjs";
 
 import MonacoCodeEditor from "@/components/editor/monaco-code-editor";
 
@@ -12,6 +13,7 @@ import type {
 } from "@/types/api";
 
 export function CodeExplainerWorkspace() {
+  const { getToken } = useAuth();
   const [language, setLanguage] =
     useState<SupportedLanguage>("python");
 
@@ -39,12 +41,13 @@ export function CodeExplainerWorkspace() {
     setError(null);
 
     try {
+      const token = await getToken();
       const response = await explainCode({
         provider,
         language,
         code,
         explanation_language: explanationLanguage,
-      });
+      }, token ?? undefined);
 
       setResult(response);
     } catch (err) {
