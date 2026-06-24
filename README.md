@@ -1,18 +1,17 @@
 # AI Code Explainer
 
-Production-ready project skeleton for an AI Code Explainer.
-
+Production-ready project.
 ## Stack
 
 - Frontend: Next.js 15, React, TypeScript, Tailwind CSS, shadcn/ui, Monaco Editor
 - Backend: FastAPI, Python 3.12
-- LLM: Google Gemini 2.5 Flash using the official `google-genai` SDK
+- LLM: Google Gemini 2.5 Flash using the official `google-genai` SDK, Qwen 2.5B model using Ollama
 - Configuration: `.env` with `GEMINI_API_KEY`
-- Deployment: Docker and Docker Compose
+- Deployment: Render for backend and Vercel for frontend.
 
 ## Current Status
 
-This repository currently contains architecture, folder structure, and initial placeholder files only. Business logic has intentionally not been implemented yet.
+This repository currently contains fully finished project.
 
 ## Architecture
 
