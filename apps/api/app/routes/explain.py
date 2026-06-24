@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api", tags=["explain"])
 
+
 @router.post(
     "/explain",
     response_model=ExplainResponse,

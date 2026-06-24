@@ -22,23 +22,26 @@ class SupportedLanguage(StrEnum):
     shell = "shell"
     other = "other"
 
-class ExplanationLanguage(str, Enum):
 
+class ExplanationLanguage(str, Enum):
     ENGLISH = "english"
 
     HINDI = "hindi"
 
     TELUGU = "telugu"
 
-class AIProvider(str, Enum):
 
+class AIProvider(str, Enum):
     GEMINI = "gemini"
 
     OLLAMA = "ollama"
 
+
 class ExplainRequest(BaseModel):
     provider: AIProvider = AIProvider.GEMINI
-    language: SupportedLanguage = Field(..., description="Programming language of the submitted code.")
+    language: SupportedLanguage = Field(
+        ..., description="Programming language of the submitted code."
+    )
     code: str = Field(..., min_length=1, max_length=30_000, description="Source code to explain.")
     explanation_language: ExplanationLanguage = ExplanationLanguage.ENGLISH
 
@@ -83,4 +86,3 @@ class ExplainResponse(BaseModel):
 class ErrorResponse(BaseModel):
     detail: str
     code: str
-
