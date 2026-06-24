@@ -113,7 +113,9 @@ class GeminiService:
                     continue
 
                 logger.exception("Gemini API request failed after retries")
-                raise GeminiServiceError("The explanation service is temporarily unavailable") from exc
+                raise GeminiServiceError(
+                    "The explanation service is temporarily unavailable"
+                ) from exc
             except Exception as exc:
                 logger.exception("Unexpected Gemini service failure")
                 raise GeminiServiceError("Failed to generate code explanation") from exc
@@ -129,7 +131,6 @@ class GeminiService:
     def _is_retryable_api_error(self, exc: genai_errors.APIError) -> bool:
         status_code = getattr(exc, "code", None)
         return status_code in {408, 409, 429, 500, 502, 503, 504}
-
 
     def _build_prompt(self, request: ExplainRequest) -> str:
         return f"""
@@ -178,4 +179,6 @@ class GeminiService:
             return CodeExplanation.model_validate(payload)
         except (json.JSONDecodeError, ValidationError) as exc:
             logger.exception("Gemini returned an invalid structured response")
-            raise GeminiInvalidResponseError("The explanation service returned invalid JSON") from exc
+            raise GeminiInvalidResponseError(
+                "The explanation service returned invalid JSON"
+            ) from exc

@@ -4,7 +4,6 @@ from app.services.ollama_service import OllamaService
 
 
 class AIFactory:
-
     @staticmethod
     def create(provider, settings):
 

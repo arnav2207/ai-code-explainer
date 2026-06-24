@@ -7,7 +7,7 @@ from app.models import (
     ExplainRequest,
     ExplainResponse,
     ExplanationMetadata,
-    AIProvider
+    AIProvider,
 )
 
 SYSTEM_PROMPT = """
@@ -59,7 +59,6 @@ Code:
 """
 
         async with httpx.AsyncClient(timeout=120) as client:
-
             response = await client.post(
                 f"{self.settings.ollama_base_url}/api/chat",
                 json={
@@ -86,9 +85,7 @@ Code:
             payload = json.loads(content)
             explanation = CodeExplanation.model_validate(payload)
         except Exception as exc:
-            raise RuntimeError(
-                "Ollama returned invalid JSON."
-            ) from exc
+            raise RuntimeError("Ollama returned invalid JSON.") from exc
 
         return ExplainResponse(
             explanation=explanation,
